@@ -26,33 +26,51 @@ class GameViewController: UIViewController {
 //        let url = Bundle.main.url(forResource: "art.scnassets/tri", withExtension: "dae")!
 //        let url = Bundle.main.url(forResource: "art.scnassets/none", withExtension: "dae")!
 //        let url = Bundle.main.url(forResource: "art.scnassets/ball_animation_bake", withExtension: "dae")!
-        let url = Bundle.main.url(forResource: "art.scnassets/ball_mesh", withExtension: "dae")!
-        let anim1Url = Bundle.main.url(forResource: "art.scnassets/ball_animation", withExtension: "dae")!
+//        let url = Bundle.main.url(forResource: "art.scnassets/ball_mesh", withExtension: "dae")!
+//        let anim1Url = Bundle.main.url(forResource: "art.scnassets/ball_animation", withExtension: "dae")!
         
-        let scene = try! SCNScene(url: url, options: [SCNSceneSource.LoadingOption.animationImportPolicy : SCNSceneSource.AnimationImportPolicy.playRepeatedly])
-//        let subScene = SCNScene(named: "art.scnassets/cube_animate_all.dae")!
+        let cameraAnimUrl = Bundle.main.url(forResource: "gacha001.scnassets/camera", withExtension: "dae")!
+        let baseScene = try! SCNScene(url: cameraAnimUrl, options: [SCNSceneSource.LoadingOption.animationImportPolicy : SCNSceneSource.AnimationImportPolicy.playRepeatedly])
         
-        let anim1Scene = try! SCNScene(url: anim1Url, options: [SCNSceneSource.LoadingOption.animationImportPolicy : SCNSceneSource.AnimationImportPolicy.playRepeatedly])
-//        let anim1SceneSource = SCNSceneSource(url: anim1Url, options: [SCNSceneSource.LoadingOption.animationImportPolicy : SCNSceneSource.AnimationImportPolicy.playRepeatedly])
+        baseScene.rootNode.animationKeys.forEach {
+//            childNode.animationKeys.forEach {
+                print("1Key: \($0)")
+//            }
+        }
         
-        func setAnimation(_ scene: SCNScene, root: SCNScene) {
+        let stageUrl = Bundle.main.url(forResource: "art.scnassets/test_stage", withExtension: "dae")!
+        let stageScene = try! SCNScene(url: stageUrl, options: [SCNSceneSource.LoadingOption.animationImportPolicy : SCNSceneSource.AnimationImportPolicy.playRepeatedly])
+        
+        let ball1Url = Bundle.main.url(forResource: "gacha001.scnassets/ball_1_horie", withExtension: "dae")!
+        let ball1Scene = try! SCNScene(url: ball1Url, options: [SCNSceneSource.LoadingOption.animationImportPolicy : SCNSceneSource.AnimationImportPolicy.playRepeatedly])
+ 
+        
+        let ballAnim1Url = Bundle.main.url(forResource: "gacha001.scnassets/ball_1_anim", withExtension: "dae")!
+        let ballAnim1Scene = try! SCNScene(url: ballAnim1Url, options: [SCNSceneSource.LoadingOption.animationImportPolicy : SCNSceneSource.AnimationImportPolicy.playRepeatedly])
+        
+        func setBallAnimation(_ scene: SCNScene, root: SCNScene) {
             scene.rootNode.childNodes.forEach { childNode in
+                print("child: \(childNode.name)")
                 childNode.animationKeys.forEach { key in
                     guard let anim = childNode.animation(forKey: key) else { return }
                     root.rootNode.childNodes.forEach {
-                        $0.addAnimation(anim, forKey: key)
+                        if $0.name == "joint" {
+                            $0.addAnimation(anim, forKey: key)
+                        }
+                        print("anim: " + String($0.name ?? ""))
                     }
                 }
             }
         }
         
-        setAnimation(anim1Scene, root: scene)
+        setBallAnimation(ballAnim1Scene, root: ball1Scene)
+        
         
 //        if let anim = anim1SceneSource?.entryWithIdentifier("ball_locator", withClass: SCNAnimation.self) {
 //            scene.rootNode.addAnimation(anim, forKey: "ball_locator")
 //        }
         
-        scene.rootNode.childNodes.forEach {
+        baseScene.rootNode.childNodes.forEach {
             $0.animationKeys.forEach {
                 print($0)
             }
@@ -67,30 +85,38 @@ class GameViewController: UIViewController {
 //            anim2?.stop()
         }
         
+        baseScene.rootNode.addChildNode(ball1Scene.rootNode)
+        baseScene.rootNode.addChildNode(stageScene.rootNode)
+        
         
         // create and add a camera to the scene
         let cameraNode = SCNNode()
         cameraNode.camera = SCNCamera()
-        scene.rootNode.addChildNode(cameraNode)
+        baseScene.rootNode.addChildNode(cameraNode)
+        
+        baseScene.rootNode.animationKeys.forEach {
+            guard let anim = baseScene.rootNode.animation(forKey: $0) else { return }
+            cameraNode.addAnimation(anim, forKey: $0)
+        }
         
         // place the camera
 //        cameraNode.position = SCNVector3(x: 0, y: 0, z: 15)
-        cameraNode.position = SCNVector3(x: 0, y: 0, z: 150)
-        cameraNode.camera?.zFar = 1000
+//        cameraNode.position = SCNVector3(x: 0, y: 0, z: 150)
+//        cameraNode.camera?.zFar = 3000
         
         // create and add a light to the scene
         let lightNode = SCNNode()
         lightNode.light = SCNLight()
         lightNode.light!.type = .omni
         lightNode.position = SCNVector3(x: 0, y: 10, z: 10)
-        scene.rootNode.addChildNode(lightNode)
+        baseScene.rootNode.addChildNode(lightNode)
         
         // create and add an ambient light to the scene
         let ambientLightNode = SCNNode()
         ambientLightNode.light = SCNLight()
         ambientLightNode.light!.type = .ambient
         ambientLightNode.light!.color = UIColor.darkGray
-        scene.rootNode.addChildNode(ambientLightNode)
+        baseScene.rootNode.addChildNode(ambientLightNode)
         
         // retrieve the ship node
 //        let ship = scene.rootNode.childNode(withName: "ship", recursively: true)!
@@ -102,7 +128,7 @@ class GameViewController: UIViewController {
         let scnView = self.view as! SCNView
         
         // set the scene to the view
-        scnView.scene = scene
+        scnView.scene = baseScene
         
         // allows the user to manipulate the camera
         scnView.allowsCameraControl = true
@@ -111,7 +137,7 @@ class GameViewController: UIViewController {
         scnView.showsStatistics = true
         
         // configure the view
-        scnView.backgroundColor = UIColor.black
+        scnView.backgroundColor = UIColor.darkGray
         
         // add a tap gesture recognizer
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))

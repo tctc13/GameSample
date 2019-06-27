@@ -31,83 +31,38 @@ class GameViewController: UIViewController {
         
         let cameraAnimUrl = Bundle.main.url(forResource: "gacha001.scnassets/camera", withExtension: "dae")!
         let baseScene = try! SCNScene(url: cameraAnimUrl, options: [SCNSceneSource.LoadingOption.animationImportPolicy : SCNSceneSource.AnimationImportPolicy.playRepeatedly])
-        
-        baseScene.rootNode.animationKeys.forEach {
-//            childNode.animationKeys.forEach {
-                print("1Key: \($0)")
-//            }
-        }
+        baseScene.background.contents = UIImage(named: "space.jpg")
         
         let stageUrl = Bundle.main.url(forResource: "art.scnassets/test_stage", withExtension: "dae")!
         let stageScene = try! SCNScene(url: stageUrl, options: [SCNSceneSource.LoadingOption.animationImportPolicy : SCNSceneSource.AnimationImportPolicy.playRepeatedly])
+        stageScene.rootNode.worldPosition = SCNVector3(x: 0, y: -25, z: -2500)
+        stageScene.rootNode.scale = SCNVector3(x: 1.5, y: 1.5, z: 3.0)
         
-        let ball1Url = Bundle.main.url(forResource: "gacha001.scnassets/ball_1_horie", withExtension: "dae")!
-        let ball1Scene = try! SCNScene(url: ball1Url, options: [SCNSceneSource.LoadingOption.animationImportPolicy : SCNSceneSource.AnimationImportPolicy.playRepeatedly])
- 
-        
-        let ballAnim1Url = Bundle.main.url(forResource: "gacha001.scnassets/ball_1_anim", withExtension: "dae")!
-        let ballAnim1Scene = try! SCNScene(url: ballAnim1Url, options: [SCNSceneSource.LoadingOption.animationImportPolicy : SCNSceneSource.AnimationImportPolicy.playRepeatedly])
-        
-        func setBallAnimation(_ scene: SCNScene, root: SCNScene) {
-            scene.rootNode.childNodes.forEach { childNode in
-                print("child: \(childNode.name)")
-                childNode.animationKeys.forEach { key in
-                    guard let anim = childNode.animation(forKey: key) else { return }
-                    root.rootNode.childNodes.forEach {
-                        if $0.name == "joint" {
-                            $0.addAnimation(anim, forKey: key)
-                        }
-                        print("anim: " + String($0.name ?? ""))
-                    }
-                }
-            }
+        // Balls
+        for i in 1...9 {
+            addBall(baseScene: baseScene, index: i)
         }
         
-        setBallAnimation(ballAnim1Scene, root: ball1Scene)
-        
-        
-//        if let anim = anim1SceneSource?.entryWithIdentifier("ball_locator", withClass: SCNAnimation.self) {
-//            scene.rootNode.addAnimation(anim, forKey: "ball_locator")
-//        }
-        
-        baseScene.rootNode.childNodes.forEach {
-            $0.animationKeys.forEach {
-                print($0)
-            }
-            
-//            let anim1 = $0.animationPlayer(forKey: "ball_locator-anim")
-//            anim1?.stop()
-            
-//            let anim1 = $0.animationPlayer(forKey: "Cube_location_Y")
-//            anim1?.stop()
-//
-//            let anim2 = $0.animationPlayer(forKey: "Camera_location_X")
-//            anim2?.stop()
-        }
-        
-        baseScene.rootNode.addChildNode(ball1Scene.rootNode)
         baseScene.rootNode.addChildNode(stageScene.rootNode)
         
-        
         // create and add a camera to the scene
-        let cameraNode = SCNNode()
-        cameraNode.camera = SCNCamera()
-        baseScene.rootNode.addChildNode(cameraNode)
+//        let cameraNode = SCNNode()
+//        cameraNode.camera = SCNCamera()
+//        baseScene.rootNode.addChildNode(cameraNode)
         
-        baseScene.rootNode.animationKeys.forEach {
-            guard let anim = baseScene.rootNode.animation(forKey: $0) else { return }
-            cameraNode.addAnimation(anim, forKey: $0)
-        }
+//        3.8333330154418945
+//        let target = SCNVector3Make(0, 0, 5000)
+//        let action = SCNAction.move(to: target, duration: 3.8333330154418945)
+//        cameraNode.runAction(action)
         
         // place the camera
-//        cameraNode.position = SCNVector3(x: 0, y: 0, z: 15)
 //        cameraNode.position = SCNVector3(x: 0, y: 0, z: 150)
 //        cameraNode.camera?.zFar = 3000
         
         // create and add a light to the scene
         let lightNode = SCNNode()
         lightNode.light = SCNLight()
-        lightNode.light!.type = .omni
+        lightNode.light!.type = .ambient
         lightNode.position = SCNVector3(x: 0, y: 10, z: 10)
         baseScene.rootNode.addChildNode(lightNode)
         
@@ -120,9 +75,10 @@ class GameViewController: UIViewController {
         
         // retrieve the ship node
 //        let ship = scene.rootNode.childNode(withName: "ship", recursively: true)!
-        
-        // animate the 3d object
 //        ship.runAction(SCNAction.repeatForever(SCNAction.rotateBy(x: 0, y: 2, z: 0, duration: 1)))
+        
+//        let stage = baseScene.rootNode.childNode(withName: "area1", recursively: true)!
+//        stage.runAction(SCNAction.repeatForever(SCNAction.rotateBy(x: 0, y: 2, z: 0, duration: 1)))
         
         // retrieve the SCNView
         let scnView = self.view as! SCNView
@@ -131,7 +87,7 @@ class GameViewController: UIViewController {
         scnView.scene = baseScene
         
         // allows the user to manipulate the camera
-        scnView.allowsCameraControl = true
+        scnView.allowsCameraControl = false//true
         
         // show statistics such as fps and timing information
         scnView.showsStatistics = true
@@ -195,5 +151,32 @@ class GameViewController: UIViewController {
             return .all
         }
     }
+    
+    func addBall(baseScene: SCNScene, index: Int) {
+        let ball1Url = Bundle.main.url(forResource: "gacha001.scnassets/ball_\(index)_horie", withExtension: "dae")!
+        let ball1Scene = try! SCNScene(url: ball1Url, options: [SCNSceneSource.LoadingOption.animationImportPolicy : SCNSceneSource.AnimationImportPolicy.playRepeatedly])
+        
+        
+        let ballAnim1Url = Bundle.main.url(forResource: "gacha001.scnassets/ball_\(index)_anim", withExtension: "dae")!
+        let ballAnim1Scene = try! SCNScene(url: ballAnim1Url, options: [SCNSceneSource.LoadingOption.animationImportPolicy : SCNSceneSource.AnimationImportPolicy.playRepeatedly])
+        
+        baseScene.rootNode.addChildNode(ball1Scene.rootNode)
+        
+        setBallAnimation(animScene: ballAnim1Scene, ballScene: ball1Scene)
+    }
 
+    func setBallAnimation(animScene: SCNScene, ballScene: SCNScene) {
+        animScene.rootNode.childNodes.forEach { childNode in
+            print("child: \(childNode.name)")
+            childNode.animationKeys.forEach { key in
+                guard let anim = childNode.animation(forKey: key) else { return }
+                ballScene.rootNode.childNodes.forEach {
+                    if $0.name == "joint" {
+                        $0.addAnimation(anim, forKey: key)
+                    }
+                    print("anim: " + String($0.name ?? ""))
+                }
+            }
+        }
+    }
 }

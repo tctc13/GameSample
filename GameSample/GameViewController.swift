@@ -20,24 +20,53 @@ class GameViewController: UIViewController {
 //        let scene = SCNScene(named: "art.scnassets/cube_noanimate.dae")!
 //        let scene = SCNScene(named: "art.scnassets/cube_animate_y.dae")!
 //        let scene = SCNScene(named: "art.scnassets/cube_animate_y.scn")!
-        let url = Bundle.main.url(forResource: "art.scnassets/cube_animate_y", withExtension: "dae")!
-        let scene = try! SCNScene(url: url, options: [SCNSceneSource.LoadingOption.animationImportPolicy : SCNSceneSource.AnimationImportPolicy.playRepeatedly])
-        let subScene = SCNScene(named: "art.scnassets/cube_animate_y.dae")!
-//        let sceneSource = SCNSceneSource(url: url, options: [SCNSceneSource.LoadingOption.animationImportPolicy : SCNSceneSource.AnimationImportPolicy.playRepeatedly])!
+//        let url = Bundle.main.url(forResource: "art.scnassets/cube_animate_all", withExtension: "dae")!
+//        let url = Bundle.main.url(forResource: "art.scnassets/test_stage", withExtension: "dae")!
+//        let url = Bundle.main.url(forResource: "art.scnassets/tri_matrix", withExtension: "dae")!
+//        let url = Bundle.main.url(forResource: "art.scnassets/tri", withExtension: "dae")!
+//        let url = Bundle.main.url(forResource: "art.scnassets/none", withExtension: "dae")!
+//        let url = Bundle.main.url(forResource: "art.scnassets/ball_animation_bake", withExtension: "dae")!
+        let url = Bundle.main.url(forResource: "art.scnassets/ball_mesh", withExtension: "dae")!
+        let anim1Url = Bundle.main.url(forResource: "art.scnassets/ball_animation", withExtension: "dae")!
         
-        let childNodes = subScene.rootNode.childNodes
-        for child in childNodes {
-            child.position = SCNVector3(0, 0, -20)
-            
-            let keys = child.animationKeys
-            for key in keys {
-                let animation = child.animation(forKey: key)!//.animationForKey(key)!
-                animation.repeatCount = 1
-                child.removeAnimation(forKey: key)//.removeAnimationForKey(key)
-                child.addAnimation(animation, forKey: key)
+        let scene = try! SCNScene(url: url, options: [SCNSceneSource.LoadingOption.animationImportPolicy : SCNSceneSource.AnimationImportPolicy.playRepeatedly])
+//        let subScene = SCNScene(named: "art.scnassets/cube_animate_all.dae")!
+        
+        let anim1Scene = try! SCNScene(url: anim1Url, options: [SCNSceneSource.LoadingOption.animationImportPolicy : SCNSceneSource.AnimationImportPolicy.playRepeatedly])
+//        let anim1SceneSource = SCNSceneSource(url: anim1Url, options: [SCNSceneSource.LoadingOption.animationImportPolicy : SCNSceneSource.AnimationImportPolicy.playRepeatedly])
+        
+        func setAnimation(_ scene: SCNScene, root: SCNScene) {
+            scene.rootNode.childNodes.forEach { childNode in
+                childNode.animationKeys.forEach { key in
+                    guard let anim = childNode.animation(forKey: key) else { return }
+                    root.rootNode.childNodes.forEach {
+                        $0.addAnimation(anim, forKey: key)
+                    }
+                }
             }
-            scene.rootNode.addChildNode(child)
         }
+        
+        setAnimation(anim1Scene, root: scene)
+        
+//        if let anim = anim1SceneSource?.entryWithIdentifier("ball_locator", withClass: SCNAnimation.self) {
+//            scene.rootNode.addAnimation(anim, forKey: "ball_locator")
+//        }
+        
+        scene.rootNode.childNodes.forEach {
+            $0.animationKeys.forEach {
+                print($0)
+            }
+            
+//            let anim1 = $0.animationPlayer(forKey: "ball_locator-anim")
+//            anim1?.stop()
+            
+//            let anim1 = $0.animationPlayer(forKey: "Cube_location_Y")
+//            anim1?.stop()
+//
+//            let anim2 = $0.animationPlayer(forKey: "Camera_location_X")
+//            anim2?.stop()
+        }
+        
         
         // create and add a camera to the scene
         let cameraNode = SCNNode()
@@ -45,7 +74,9 @@ class GameViewController: UIViewController {
         scene.rootNode.addChildNode(cameraNode)
         
         // place the camera
-        cameraNode.position = SCNVector3(x: 0, y: 0, z: 15)
+//        cameraNode.position = SCNVector3(x: 0, y: 0, z: 15)
+        cameraNode.position = SCNVector3(x: 0, y: 0, z: 150)
+        cameraNode.camera?.zFar = 1000
         
         // create and add a light to the scene
         let lightNode = SCNNode()

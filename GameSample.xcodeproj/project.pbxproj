@@ -3,11 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		753EAC4592AF4D445A932C6C /* Pods_GameSampleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9623E00CB5A7B50D91A7AEF3 /* Pods_GameSampleTests.framework */; };
+		7662A32922C46C6100669EC8 /* gacha001.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 7662A32722C4695B00669EC8 /* gacha001.scnassets */; };
 		76A4E52722C1C32900BDDBE1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76A4E52622C1C32900BDDBE1 /* AppDelegate.swift */; };
 		76A4E52922C1C32900BDDBE1 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 76A4E52822C1C32900BDDBE1 /* art.scnassets */; };
 		76A4E52B22C1C32900BDDBE1 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76A4E52A22C1C32900BDDBE1 /* GameViewController.swift */; };
@@ -42,6 +43,7 @@
 /* Begin PBXFileReference section */
 		0A029982CB37F7D97E45B10B /* Pods-GameSampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GameSampleTests.release.xcconfig"; path = "Target Support Files/Pods-GameSampleTests/Pods-GameSampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		69447D6E9BFCF8E8FDD1AC4B /* Pods_GameSample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GameSample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7662A32722C4695B00669EC8 /* gacha001.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = gacha001.scnassets; sourceTree = "<group>"; };
 		76A4E52322C1C32900BDDBE1 /* GameSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		76A4E52622C1C32900BDDBE1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		76A4E52822C1C32900BDDBE1 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
@@ -133,9 +135,10 @@
 				76A4E52622C1C32900BDDBE1 /* AppDelegate.swift */,
 				76A4E55622C1C3CC00BDDBE1 /* TopViewController.swift */,
 				76A4E55822C1C3DC00BDDBE1 /* TopViewController.storyboard */,
-				76A4E52822C1C32900BDDBE1 /* art.scnassets */,
 				76A4E52A22C1C32900BDDBE1 /* GameViewController.swift */,
 				76A4E52C22C1C32900BDDBE1 /* GameViewController.storyboard */,
+				76A4E52822C1C32900BDDBE1 /* art.scnassets */,
+				7662A32722C4695B00669EC8 /* gacha001.scnassets */,
 				76A4E52F22C1C32C00BDDBE1 /* Assets.xcassets */,
 				76A4E53122C1C32C00BDDBE1 /* LaunchScreen.storyboard */,
 				76A4E53422C1C32C00BDDBE1 /* Info.plist */,
@@ -171,7 +174,6 @@
 				9E150DAF1C20F6F0CA63A281 /* Pods-GameSampleUITests.debug.xcconfig */,
 				8B5F36E2B3F7CF71E5791FAA /* Pods-GameSampleUITests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -283,6 +285,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7662A32922C46C6100669EC8 /* gacha001.scnassets in Resources */,
 				76A4E52922C1C32900BDDBE1 /* art.scnassets in Resources */,
 				76A4E53322C1C32C00BDDBE1 /* LaunchScreen.storyboard in Resources */,
 				76A4E53022C1C32C00BDDBE1 /* Assets.xcassets in Resources */,

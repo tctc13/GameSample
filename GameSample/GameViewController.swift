@@ -87,7 +87,7 @@ class GameViewController: UIViewController {
         scnView.scene = baseScene
         
         // allows the user to manipulate the camera
-        scnView.allowsCameraControl = false//true
+        scnView.allowsCameraControl = true
         
         // show statistics such as fps and timing information
         scnView.showsStatistics = true
